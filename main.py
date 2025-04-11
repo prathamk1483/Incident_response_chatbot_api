@@ -5,6 +5,7 @@ import os
 import google.generativeai as genai
 from dotenv import load_dotenv
 from fastapi.middleware.cors import CORSMiddleware
+import re
 
 load_dotenv()
 
@@ -21,6 +22,20 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
+def remove_html_except_strong(text):
+    # Preserve <strong> and </strong> by temporarily replacing them with placeholders
+    text = re.sub(r'<\s*strong\s*>', '[STRONG_OPEN]', text, flags=re.IGNORECASE)
+    text = re.sub(r'<\s*/\s*strong\s*>', '[STRONG_CLOSE]', text, flags=re.IGNORECASE)
+
+    # Remove all remaining HTML tags
+    text = re.sub(r'<[^>]+>', '', text)
+
+    # Restore <strong> tags from placeholders
+    text = text.replace('[STRONG_OPEN]', '<strong>')
+    text = text.replace('[STRONG_CLOSE]', '</strong>')
+
+    return text
+
 
 class IncidentRequest(BaseModel):
     type: str
@@ -36,6 +51,6 @@ Given the following type of security incident, precisely explain standard ways t
 Incident type: {req.type}
 """
         response = model.generate_content(prompt)
-        return {"response": response.text}
+        return {"response": remove_html_except_strong(response.text)}
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
