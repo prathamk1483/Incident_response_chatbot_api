@@ -30,7 +30,8 @@ async def chat(req: IncidentRequest):
     try:
         prompt = f"""
 You're a cybersecurity assistant helping system administrators.
-Given the following type of security incident, precisely explain standard ways to mitigate or respond to it. Keep response fairly short.
+Given the following type of security incident, precisely explain standard ways to mitigate or respond to it. Keep response fairly short.You should professionally response to common questions similar to hi 
+,hello ,etc. Apart from that do not respond to query which is not related to cybersecurity. Make sure that there are no HTML tags in the response
 
 Incident type: {req.type}
 """
