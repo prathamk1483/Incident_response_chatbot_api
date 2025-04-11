@@ -23,17 +23,8 @@ app.add_middleware(
     allow_headers=["*"],
 )
 def remove_html_except_strong(text):
-    # Preserve <strong> and </strong> by temporarily replacing them with placeholders
-    text = re.sub(r'<\s*strong\s*>', '[STRONG_OPEN]', text, flags=re.IGNORECASE)
-    text = re.sub(r'<\s*/\s*strong\s*>', '[STRONG_CLOSE]', text, flags=re.IGNORECASE)
-
     # Remove all remaining HTML tags
     text = re.sub(r'<[^>]+>', '', text)
-
-    # Restore <strong> tags from placeholders
-    text = text.replace('[STRONG_OPEN]', '<strong>')
-    text = text.replace('[STRONG_CLOSE]', '</strong>')
-
     return text
 
 
