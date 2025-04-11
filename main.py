@@ -4,6 +4,7 @@ from pydantic import BaseModel
 import os
 import google.generativeai as genai
 from dotenv import load_dotenv
+from fastapi.middleware.cors import CORSMiddleware
 
 load_dotenv()
 
