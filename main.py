@@ -13,6 +13,14 @@ genai.configure(api_key=os.getenv("GEMINI_API_KEY"))
 
 model = genai.GenerativeModel("gemini-2.0-flash-thinking-exp-01-21")
 
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],  # Replace with your domain in production
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
+
 class IncidentRequest(BaseModel):
     type: str
 
